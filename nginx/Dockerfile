@@ -2,8 +2,10 @@
 FROM nginx:latest
 
 # Install necessary packages including software-properties-common and certbot
+# Added ca-certificates and updated RUN command to install and update CA certificates
 RUN apt-get update && \
-    apt-get install -y software-properties-common certbot python3-certbot-nginx
+    apt-get install -y software-properties-common certbot python3-certbot-nginx ca-certificates && \
+    update-ca-certificates
 
 # Remove the default Nginx configuration files
 RUN rm /etc/nginx/nginx.conf && \
