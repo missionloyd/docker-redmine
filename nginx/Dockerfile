@@ -13,15 +13,15 @@ RUN rm /etc/nginx/nginx.conf && \
 COPY nginx.conf /etc/nginx/
 COPY project.conf /etc/nginx/conf.d/
 
-# Set up a command or script to renew the SSL certificate
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
 # Set up a volume for Certbot certificates and logs
 VOLUME ["/etc/letsencrypt", "/var/log/letsencrypt"]
 
 # Expose HTTP and HTTPS ports
 EXPOSE 80 443
+
+# Set up a command or script to renew the SSL certificate
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Use the entrypoint script to handle cert renewals and start Nginx
 ENTRYPOINT ["/entrypoint.sh"]
