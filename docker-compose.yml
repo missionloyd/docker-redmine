@@ -1,5 +1,3 @@
-version: '2.3'
-
 services:
   postgresql:
     image: sameersbn/postgresql:14-20230628
@@ -9,18 +7,12 @@ services:
       - DB_NAME=redmine_production
     volumes:
       - /srv/docker/redmine/postgresql:/var/lib/postgresql
-    healthcheck:
-      test: "psql -U postgres"
-      interval: 3s
-      timeout: 3s
-      retries: 5
-      start_period: 10s
+
   redmine:
     build: ./
     image: sameersbn/redmine:5.1.3
     depends_on:
-      postgresql:
-        condition: service_healthy
+      - postgresql
     environment:
       - TZ=America/Denver
 
@@ -32,8 +24,12 @@ services:
       - DB_NAME=redmine_production
       - DB_SSL_MODE=prefer
 
-      - REDMINE_PORT=10083
-      - REDMINE_HTTPS=false
+      - REDMINE_PORT=10445
+      - REDMINE_HTTPS=true
+      # Defaults for ssl path.  Please read https://github.com/sameersbn/docker-redmine#ssl
+      #- SSL_KEY_PATH=/home/redmine/data/certs
+      #- SSL_CERTIFICATE_PATH=/home/redmine/data/certs
+      #- SSL_DHPARAM_PATH=/home/redmine/data/certs
       - REDMINE_RELATIVE_URL_ROOT=
       - REDMINE_SECRET_TOKEN=
 
@@ -66,15 +62,7 @@ services:
 
     ports:
       - "10083:80"
+      - "10445:443"
     volumes:
       - /srv/docker/redmine/redmine:/home/redmine/data
       - /srv/docker/redmine/redmine-logs:/var/log/redmine
-  nginx:
-    container_name: nginx
-    restart: always
-    build: ./nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - redmine

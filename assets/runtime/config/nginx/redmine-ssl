@@ -9,17 +9,18 @@ upstream redmine {
 server {
   listen 0.0.0.0:80;
   listen [::]:80 default_server;
-  server_name _;
+  server_name redmine.powertheoryinc.com;
   server_tokens off;
 
   ## Redirects all traffic to the HTTPS host
-  return 301 https://$host:{{REDMINE_PORT}}$request_uri;
+  return 301 https://redmine.powertheoryinc.com:{{REDMINE_PORT}}$request_uri;
 }
 
 ## HTTPS host
 server {
   listen 0.0.0.0:443 ssl http2;
   listen [::]:443 ssl http2 default_server;
+  server_name redmine.powertheoryinc.com;
   server_tokens off;
   root {{REDMINE_INSTALL_DIR}}/public;
 
