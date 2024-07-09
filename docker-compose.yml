@@ -28,7 +28,6 @@ services:
     volumes:
       - /srv/docker/redmine/nginx/conf.d:/etc/nginx/conf.d
       - /srv/docker/redmine/redmine/certs:/etc/ssl/certs
-      - /srv/docker/redmine/nginx/letsencrypt:/etc/letsencrypt
       - /srv/docker/redmine/nginx/logs:/var/log/nginx
     depends_on:
       - postgresql
