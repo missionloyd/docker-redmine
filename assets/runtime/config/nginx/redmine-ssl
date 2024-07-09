@@ -13,7 +13,7 @@ server {
   server_tokens off;
 
   ## Redirects all traffic to the HTTPS host
-  return 301 https://redmine.powertheoryinc.com$request_uri;
+  return 301 https://redmine.powertheoryinc.com:{{REDMINE_PORT}}$request_uri;
 }
 
 ## HTTPS host
