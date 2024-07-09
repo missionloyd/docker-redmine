@@ -14,7 +14,7 @@ COPY nginx.conf /etc/nginx/
 COPY project.conf /etc/nginx/conf.d/
 
 # Set up a volume for Certbot certificates and logs
-VOLUME ["/etc/letsencrypt", "/var/log/letsencrypt", "/etc/ssl/certs/"]
+VOLUME ["/etc/letsencrypt", "/var/log/letsencrypt"]
 
 # Expose HTTP and HTTPS ports
 EXPOSE 80 443

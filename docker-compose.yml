@@ -15,31 +15,12 @@ services:
       timeout: 3s
       retries: 5
       start_period: 10s
-
-  nginx:
-    container_name: nginx
-    restart: always
-    build: ./nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
-    volumes:
-      - /srv/docker/redmine/nginx/conf.d:/etc/nginx/conf.d
-      - /srv/docker/redmine/redmine/certs:/etc/ssl/certs
-      - /srv/docker/redmine/nginx/logs:/var/log/nginx
-    depends_on:
-      - postgresql
-
   redmine:
     build: ./
     image: sameersbn/redmine:5.1.3
     depends_on:
       postgresql:
         condition: service_healthy
-      nginx:
-        condition: service_started
     environment:
       - TZ=America/Denver
 
@@ -51,11 +32,10 @@ services:
       - DB_NAME=redmine_production
       - DB_SSL_MODE=prefer
 
-      - REDMINE_PORT=10445
-      - REDMINE_HTTPS=true
-      # - SSL_KEY_PATH=/home/redmine/data/certs/
-      # - SSL_CERTIFICATE_PATH=/home/redmine/data/certs/
-      # - SSL_DHPARAM_PATH=/home/redmine/data/certs/
+      - REDMINE_PORT=10083
+      - REDMINE_HTTPS=false
+      - REDMINE_RELATIVE_URL_ROOT=
+      - REDMINE_SECRET_TOKEN=
 
       - REDMINE_SUDO_MODE_ENABLED=false
       - REDMINE_SUDO_MODE_TIMEOUT=15
@@ -86,8 +66,21 @@ services:
 
     ports:
       - "10083:80"
-      - "10445:443"
     volumes:
       - /srv/docker/redmine/redmine:/home/redmine/data
       - /srv/docker/redmine/redmine-logs:/var/log/redmine
-      - /srv/docker/redmine/redmine/certs:/home/redmine/data/certs
+  nginx:
+    container_name: nginx
+    restart: always
+    build: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
+    volumes:
+      - /srv/docker/redmine/nginx/conf.d:/etc/nginx/conf.d
+      - /srv/docker/redmine/nginx/letsencrypt:/etc/letsencrypt
+      - /srv/docker/redmine/nginx/logs:/var/log/nginx
+    depends_on:
+      - redmine
