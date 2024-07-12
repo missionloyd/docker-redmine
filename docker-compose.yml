@@ -31,7 +31,7 @@ services:
       #- SSL_CERTIFICATE_PATH=/home/redmine/data/certs
       #- SSL_DHPARAM_PATH=/home/redmine/data/certs
       - REDMINE_RELATIVE_URL_ROOT=
-      - REDMINE_SECRET_TOKEN=
+      - REDMINE_SECRET_TOKEN=${REDMINE_SECRET_TOKEN}
 
       - REDMINE_SUDO_MODE_ENABLED=false
       - REDMINE_SUDO_MODE_TIMEOUT=15
